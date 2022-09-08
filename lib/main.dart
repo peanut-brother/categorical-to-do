@@ -1,5 +1,6 @@
 // Started with https://docs.flutter.dev/development/ui/widgets-intro
 import 'package:flutter/material.dart';
+import 'package:to_dont_list/to_do_catagory.dart';
 import 'package:to_dont_list/to_do_items.dart';
 
 class ToDoList extends StatefulWidget {
@@ -24,16 +25,22 @@ class _ToDoListState extends State<ToDoList> {
         builder: (context) {
           return AlertDialog(
             title: const Text('Item To Add'),
-            content: TextField(
-              onChanged: (value) {
-                setState(() {
-                  valueText = value;
-                });
-              },
-              controller: _inputController,
-              decoration:
-                  const InputDecoration(hintText: "type something here"),
-            ),
+            content: 
+              Row(
+                children: [
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        valueText = value;
+                      });
+                    },
+                    controller: _inputController,
+                    decoration:
+                        const InputDecoration(hintText: "type something here"),
+                  ),
+                  
+                ],
+              ),
             actions: <Widget>[
               ElevatedButton(
                 key: const Key("OKButton"),
@@ -72,7 +79,18 @@ class _ToDoListState extends State<ToDoList> {
 
   String valueText = "";
 
-  final List<Item> items = [const Item(name: "add more todos")];
+  final List<Category> categorys = [Category(items: [const Item(name: "add more todos")], name: "Main Category")];
+
+  void _removeItem(Item i) {
+    for (var cat in categorys) {
+      if (cat.getItems().contains(i)) {
+        cat.remove(i);
+      }
+      if (cat.getItems().isEmpty) {
+        categorys.remove(cat);
+      }
+    }
+  }
 
   final _itemSet = <Item>{};
 
@@ -100,15 +118,25 @@ class _ToDoListState extends State<ToDoList> {
   void _handleDeleteItem(Item item) {
     setState(() {
       print("Deleting item");
-      items.remove(item);
+      _removeItem(item);
     });
   }
 
-  void _handleNewItem(String itemText) {
+  void _handleNewItem(String itemText, Category category) {
     setState(() {
       print("Adding new item");
       Item item = Item(name: itemText);
-      items.insert(0, item);
+      category.add(item);
+      _inputController.clear();
+    });
+  }
+
+  void _handleNewCategory(String catText, itemText) {
+    setState(() {
+      print("Adding new category");
+      Item item = Item(name: itemText);
+      Category category = Category(items: [item], name: catText);
+      categorys.insert(0, category);
       _inputController.clear();
     });
   }
@@ -144,3 +172,5 @@ void main() {
     home: ToDoList(),
   ));
 }
+
+// restructure so that button to add item is associated with each individual category. add button to add categories. Percentage of completed tasks in category. Rework unit tests.
