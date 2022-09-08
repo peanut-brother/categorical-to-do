@@ -102,17 +102,6 @@ class _ToDoListState extends State<ToDoList> {
 
   final List<Category> categorys = [Category(items: [const Item(name: "add more todos")], name: "Main Category")];
 
-  void _removeItem(Item i) {
-    for (var cat in categorys) {
-      if (cat.getItems().contains(i)) {
-        cat.items.remove(i);
-      }
-      if (cat.getItems().isEmpty) {
-        categorys.remove(cat);
-      }
-    }
-  }
-
   void _handleNewCategory(String catText, itemText) {
     setState(() {
       print("Adding new category");
