@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:to_dont_list/main.dart';
+import 'package:to_dont_list/to_do_catagory.dart';
 import 'package:to_dont_list/to_do_items.dart';
 
 void main() {
@@ -86,4 +87,11 @@ void main() {
   });
 
   // One to test the tap and press actions on the items?
+
+  test('Category has an item', () {
+    const item = Item(name: "test Item");
+    var category = Category(items: [item]);
+
+    expect(category.getItems()[0], isA<Item>());
+  });
 }
