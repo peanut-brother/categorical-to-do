@@ -22,16 +22,12 @@ typedef ToDoNewItemCallback = Function(Category category);
 class ToDoCategory extends StatefulWidget {
   ToDoCategory(
     {required this.category,
-    required this.onListChanged,
     required this.onDeleteCategory,
-    required this.onNewItem,
     super.key}
   );
 
   final Category category;
-  final ToDoCategoryChangedCallback onListChanged;
   final ToDoCategoryRemovedCallback onDeleteCategory;
-  final ToDoNewItemCallback onNewItem;
 
   @override
   State<ToDoCategory> createState() => _ToDoCategoryState();
@@ -45,8 +41,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
   void _adjustPercentage() {
     setState(() {
       int numTrue = 0;
-      widget.completed.map((complete) => {if (complete) {numTrue++}});
-      _percentComplete = 100 * (numTrue ~/ widget.completed.length);
+      _percentComplete = 100 * (_itemSet.length ~/ widget.category.items.length);
     });
   }
 
@@ -63,6 +58,27 @@ class _ToDoCategoryState extends State<ToDoCategory> {
       Item item = Item(name: itemText);
       category.items.add(item);
       _inputController.clear();
+    });
+  }
+
+  void _handleListChanged(Item item, bool completed) {
+    setState(() {
+      // When a user changes what's in the list, you need
+      // to change _itemSet inside a setState call to
+      // trigger a rebuild.
+      // The framework then calls build, below,
+      // which updates the visual appearance of the app.
+
+      widget.category.items.remove(item);
+      if (!completed) {
+        print("Completing");
+        _itemSet.add(item);
+        widget.category.items.add(item);
+      } else {
+        print("Making Undone");
+        _itemSet.remove(item);
+        widget.category.items.insert(0, item);
+      }
     });
   }
 
@@ -141,7 +157,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
         Row(
           children: [
             ListTile(
-              onLongPress: widget.completed.every((element) => true)
+              onLongPress: _itemSet.isEmpty
                   ? () {
                       widget.onDeleteCategory(widget.category);
                     }
@@ -152,7 +168,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
               ),
             ),
             ElevatedButton(
-              onPressed: widget.onNewItem(widget.category),
+              onPressed: () {_displayTextInputDialog(context);},
               child: const Icon(Icons.add),
             ),
           ],

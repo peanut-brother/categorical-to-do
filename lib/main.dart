@@ -25,20 +25,39 @@ class _ToDoListState extends State<ToDoList> {
         builder: (context) {
           return AlertDialog(
             title: const Text('Item To Add'),
-            content: 
-              Row(
-                children: [
-                  TextField(
-                    onChanged: (value) {
-                      setState(() {
-                        valueText = value;
-                      });
-                    },
-                    controller: _inputController,
-                    decoration:
-                        const InputDecoration(hintText: "type something here"),
+            content:
+              Column(
+                children: [ 
+                  Row(
+                    children: [
+                      TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            catText = value;
+                          });
+                        },
+                        controller: _inputController,
+                        decoration:
+                            const InputDecoration(hintText: "Category Name"),
+                      ),
+                      
+                    ],
                   ),
-                  
+                  Row(
+                    children: [
+                      TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            valueText = value;
+                          });
+                        },
+                        controller: _inputController,
+                        decoration:
+                            const InputDecoration(hintText: "First Item Name"),
+                      ),
+                      
+                    ],
+                  ),
                 ],
               ),
             actions: <Widget>[
@@ -48,7 +67,7 @@ class _ToDoListState extends State<ToDoList> {
                 child: const Text('OK'),
                 onPressed: () {
                   setState(() {
-                    _handleNewItem(valueText);
+                    _handleNewCategory(catText, valueText);
                     Navigator.pop(context);
                   });
                 },
@@ -77,6 +96,8 @@ class _ToDoListState extends State<ToDoList> {
         });
   }
 
+  String catText = "";
+
   String valueText = "";
 
   final List<Category> categorys = [Category(items: [const Item(name: "add more todos")], name: "Main Category")];
@@ -84,33 +105,12 @@ class _ToDoListState extends State<ToDoList> {
   void _removeItem(Item i) {
     for (var cat in categorys) {
       if (cat.getItems().contains(i)) {
-        cat.remove(i);
+        cat.items.remove(i);
       }
       if (cat.getItems().isEmpty) {
         categorys.remove(cat);
       }
     }
-  }
-
-  void _handleListChanged(Item item, bool completed) {
-    setState(() {
-      // When a user changes what's in the list, you need
-      // to change _itemSet inside a setState call to
-      // trigger a rebuild.
-      // The framework then calls build, below,
-      // which updates the visual appearance of the app.
-
-      items.remove(item);
-      if (!completed) {
-        print("Completing");
-        _itemSet.add(item);
-        items.add(item);
-      } else {
-        print("Making Undone");
-        _itemSet.remove(item);
-        items.insert(0, item);
-      }
-    });
   }
 
   void _handleNewCategory(String catText, itemText) {
@@ -132,11 +132,9 @@ class _ToDoListState extends State<ToDoList> {
         body: ListView(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           children: categorys.map((category) {
-            return ToDoListItem(
-              item: category,
-              completed: _itemSet.contains(item),
-              onListChanged: _handleListChanged,
-              onDeleteItem: _handleDeleteItem,
+            return ToDoCategory(
+              category: category,
+              onDeleteCategory: (category) {},
             );
           }).toList(),
         ),

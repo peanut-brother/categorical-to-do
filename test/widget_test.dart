@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:to_dont_list/main.dart';
-import 'package:to_dont_list/to_do_catagory.dart';
+import 'package:to_dont_list/to_do_category.dart';
 import 'package:to_dont_list/to_do_items.dart';
 
 void main() {
@@ -90,7 +90,7 @@ void main() {
 
   test('Category has an item', () {
     const item = Item(name: "test Item");
-    var category = Category(items: [item]);
+    var category = Category(items: [item], name: "test Category");
 
     expect(category.getItems()[0], isA<Item>());
   });
