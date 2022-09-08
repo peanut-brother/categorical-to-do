@@ -12,14 +12,7 @@ class Category {
   List<Item> getItems() {
     return items;
   }
-  
-  void add(Item item) {
-    items.add(item);
-  }
 
-  void remove(Item item) {
-    items.remove(item);
-  }
 }
 
 typedef ToDoCategoryChangedCallback = Function(Category category, bool complete);
@@ -29,7 +22,6 @@ typedef ToDoNewItemCallback = Function(Category category);
 class ToDoCategory extends StatefulWidget {
   ToDoCategory(
     {required this.category,
-    required this.completed,
     required this.onListChanged,
     required this.onDeleteCategory,
     required this.onNewItem,
@@ -37,7 +29,6 @@ class ToDoCategory extends StatefulWidget {
   );
 
   final Category category;
-  final List<bool> completed;
   final ToDoCategoryChangedCallback onListChanged;
   final ToDoCategoryRemovedCallback onDeleteCategory;
   final ToDoNewItemCallback onNewItem;
@@ -62,7 +53,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
   void _handleDeleteItem(Item item) {
     setState(() {
       print("Deleting item");
-      _removeItem(item);
+      widget.category.items.remove(item);
     });
   }
 
@@ -70,10 +61,78 @@ class _ToDoCategoryState extends State<ToDoCategory> {
     setState(() {
       print("Adding new item");
       Item item = Item(name: itemText);
-      category.add(item);
+      category.items.add(item);
       _inputController.clear();
     });
   }
+
+  final ButtonStyle yesStyle = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20), primary: Colors.green);
+  final ButtonStyle noStyle = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20), primary: Colors.red);
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    print("Loading Dialog");
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Item To Add'),
+            content: 
+              Row(
+                children: [
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        valueText = value;
+                      });
+                    },
+                    controller: _inputController,
+                    decoration:
+                        const InputDecoration(hintText: "type something here"),
+                  ),
+                  
+                ],
+              ),
+            actions: <Widget>[
+              ElevatedButton(
+                key: const Key("OKButton"),
+                style: yesStyle,
+                child: const Text('OK'),
+                onPressed: () {
+                  setState(() {
+                    _handleNewItem(valueText, widget.category);
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+
+              // https://stackoverflow.com/questions/52468987/how-to-turn-disabled-button-into-enabled-button-depending-on-conditions
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _inputController,
+                builder: (context, value, child) {
+                  return ElevatedButton(
+                    key: const Key("CancelButton"),
+                    style: noStyle,
+                    onPressed: value.text.isNotEmpty
+                        ? () {
+                            setState(() {
+                              Navigator.pop(context);
+                            });
+                          }
+                        : null,
+                    child: const Text('Cancel'),
+                  );
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  String valueText = "";
+
+  final _itemSet = <Item>{};
 
   @override
   Widget build(BuildContext context) {

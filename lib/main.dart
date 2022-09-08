@@ -1,6 +1,6 @@
 // Started with https://docs.flutter.dev/development/ui/widgets-intro
 import 'package:flutter/material.dart';
-import 'package:to_dont_list/to_do_catagory.dart';
+import 'package:to_dont_list/to_do_category.dart';
 import 'package:to_dont_list/to_do_items.dart';
 
 class ToDoList extends StatefulWidget {
@@ -92,8 +92,6 @@ class _ToDoListState extends State<ToDoList> {
     }
   }
 
-  final _itemSet = <Item>{};
-
   void _handleListChanged(Item item, bool completed) {
     setState(() {
       // When a user changes what's in the list, you need
@@ -115,22 +113,6 @@ class _ToDoListState extends State<ToDoList> {
     });
   }
 
-  void _handleDeleteItem(Item item) {
-    setState(() {
-      print("Deleting item");
-      _removeItem(item);
-    });
-  }
-
-  void _handleNewItem(String itemText, Category category) {
-    setState(() {
-      print("Adding new item");
-      Item item = Item(name: itemText);
-      category.add(item);
-      _inputController.clear();
-    });
-  }
-
   void _handleNewCategory(String catText, itemText) {
     setState(() {
       print("Adding new category");
@@ -149,9 +131,9 @@ class _ToDoListState extends State<ToDoList> {
         ),
         body: ListView(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          children: items.map((item) {
+          children: categorys.map((category) {
             return ToDoListItem(
-              item: item,
+              item: category,
               completed: _itemSet.contains(item),
               onListChanged: _handleListChanged,
               onDeleteItem: _handleDeleteItem,
