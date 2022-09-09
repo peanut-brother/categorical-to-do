@@ -73,17 +73,23 @@ void main() {
     await tester.pump(); // Pump after every action to rebuild the widgets
     expect(find.text("hi"), findsNothing);
 
-    await tester.enterText(find.byType(TextField), 'hi');
+    await tester.enterText(find.byKey(const Key('textField1')), 'hi');
     await tester.pump();
     expect(find.text("hi"), findsOneWidget);
+
+    await tester.enterText(find.byKey(const Key('textField2')), 'hi2');
+    await tester.pump();
+    expect(find.text("hi2"), findsOneWidget);
 
     await tester.tap(find.byKey(const Key("OKButton")));
     await tester.pump();
-    expect(find.text("hi"), findsOneWidget);
+    expect(find.text("hi2"), findsOneWidget);
 
     final listItemFinder = find.byType(ToDoListItem);
+    final listCatFinder = find.byType(Category);
 
     expect(listItemFinder, findsNWidgets(2));
+    expect(listCatFinder, findsNWidgets(2));
   });
 
   // One to test the tap and press actions on the items?

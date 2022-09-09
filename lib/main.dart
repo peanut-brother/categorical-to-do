@@ -32,6 +32,7 @@ class _ToDoListState extends State<ToDoList> {
                   Flexible(
                     child: 
                       TextField(
+                      key: Key('textField1'),
                       onChanged: (value) {
                         setState(() {
                           catText = value;
@@ -45,6 +46,7 @@ class _ToDoListState extends State<ToDoList> {
                   Flexible(
                     child: 
                       TextField(
+                      key: Key('textField2'),
                       onChanged: (value) {
                         setState(() {
                           valueText = value;

@@ -51,6 +51,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
     setState(() {
       print("Deleting item");
       widget.category.items.remove(item);
+      widget.itemSet.remove(item);
       _adjustPercentage();
     });
   }
