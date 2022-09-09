@@ -152,38 +152,65 @@ class _ToDoCategoryState extends State<ToDoCategory> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
+    return Container(
+      height: 200,
+      child: Expanded( 
+        child: Column(
           children: [
-            ListTile(
-              onLongPress: _itemSet.isEmpty
-                  ? () {
-                      widget.onDeleteCategory(widget.category);
-                    }
-                  : null,
-              title: Text(
-                widget.category.name,
-                style: null,
+              Row(
+                children: [ 
+                  const SizedBox(
+                    width: 20
+                  ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: GestureDetector(
+                      onLongPress: _itemSet.isEmpty 
+                        ? () {
+                          setState(() {
+                            widget.onDeleteCategory(widget.category);
+                          });
+                        }
+                        : null,
+                      child: Expanded(
+                        child: Text(
+                          widget.category.name,
+                          style: null,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20
+                  ),
+                  const Spacer(),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: ElevatedButton(
+                      onPressed: () { setState(() {_displayTextInputDialog(context);});},
+                      child: const Icon(Icons.add),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20
+                  )
+                ],
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {_displayTextInputDialog(context);},
-              child: const Icon(Icons.add),
+            Flexible(
+              child: ListView(
+                children: widget.category.items.map((item) {
+                  return ToDoListItem(
+                    item: item,
+                    completed: _itemSet.contains(item),
+                    onListChanged: _handleListChanged,
+                    onDeleteItem: _handleDeleteItem,
+                  );
+                }).toList(),
+              ),
             ),
           ],
         ),
-        ListView(
-          children: widget.category.items.map((item) {
-            return ToDoListItem(
-              item: item,
-              completed: _itemSet.contains(item),
-              onListChanged: _handleListChanged,
-              onDeleteItem: _handleDeleteItem,
-            );
-          }).toList(),
-        ),
-      ],
+      ),
     );
   }
 }
