@@ -166,4 +166,17 @@ void main() {
     expect(titleFinder, findsOneWidget);
     expect(percentFinder, findsOneWidget);
   });
+
+  testWidgets('Long press on button removes category.', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: ToDoList()));
+
+    await tester.tap(find.text('add more todos'));
+    await tester.pump();
+    await tester.longPress(find.byType(ElevatedButton));
+    await tester.pump(); // Pump after every action to rebuild the widgets
+
+    final categoryFinder = find.byType(ToDoCategory);
+
+    expect(categoryFinder, findsNothing);
+  });
 }
