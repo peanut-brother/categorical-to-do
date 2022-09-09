@@ -146,7 +146,24 @@ void main() {
     await tester.pump();
 
     expect(listItemFinder, findsOneWidget);
+  });
+
+  testWidgets('Category has title and percentage', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: ToDoCategory(
+              category: Category(
+                items:[],
+                name: "testCat"
+              ),
+              onDeleteCategory: (category) {},
+              itemSet: <Item>{},
+            ))));
+    final titleFinder = find.text('testCat');
+    final percentFinder = find.text('%0');
 
 
+    expect(titleFinder, findsOneWidget);
+    expect(percentFinder, findsOneWidget);
   });
 }
