@@ -97,20 +97,15 @@ class _ToDoCategoryState extends State<ToDoCategory> {
           return AlertDialog(
             title: const Text('Item To Add'),
             content: 
-              Row(
-                children: [
-                  TextField(
-                    onChanged: (value) {
-                      setState(() {
-                        valueText = value;
-                      });
-                    },
-                    controller: _inputController,
-                    decoration:
-                        const InputDecoration(hintText: "type something here"),
-                  ),
-                  
-                ],
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    valueText = value;
+                  });
+                },
+                controller: _inputController,
+                decoration:
+                    const InputDecoration(hintText: "type something here"),
               ),
             actions: <Widget>[
               ElevatedButton(
