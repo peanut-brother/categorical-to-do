@@ -50,7 +50,6 @@ class _ToDoCategoryState extends State<ToDoCategory> {
       _adjustPercentage();
       print("Deleting item");
       widget.category.items.remove(item);
-      _itemSet.remove(item);
     });
   }
 
@@ -153,69 +152,69 @@ class _ToDoCategoryState extends State<ToDoCategory> {
   Widget build(BuildContext context) {
     return Container(
       height: 200,
-      child: Expanded( 
-        child: Column(
-          children: [
-              Row(
-                children: [ 
-                  const SizedBox(
-                    width: 20
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: GestureDetector(
-                      onLongPress: _itemSet.isEmpty 
-                        ? () {
-                          setState(() {
-                            widget.onDeleteCategory(widget.category);
-                          });
-                        }
-                        : null,
-                      child: Expanded(
-                        child: Text(
-                          widget.category.name,
-                          style: null,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Spacer(
-                  ),
-                  Expanded(
+      child: Column(
+        children: [
+            Row(
+              children: [ 
+                const SizedBox(
+                  width: 20
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                    child: Expanded(
                     child: Text(
-                      "%$_percentComplete",
+                      widget.category.name,
                       style: null,
                     ),
                   ),
-                  const SizedBox(
-                    width: 20
+                ),
+                const Spacer(
+                ),
+                Expanded(
+                  child: Text(
+                    "%$_percentComplete",
+                    style: null,
                   ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: ElevatedButton(
-                      onPressed: () { setState(() {_displayTextInputDialog(context);});},
-                      child: const Icon(Icons.add),
-                    ),
+                ),
+                const SizedBox(
+                  width: 20
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: ElevatedButton(
+                    onPressed: () { 
+                      setState(() {
+                        _displayTextInputDialog(context);
+                      });
+                    },
+                    onLongPress: _itemSet.isEmpty 
+                      ? () {
+                        setState(() {
+                          widget.onDeleteCategory(widget.category);
+                        });
+                      }
+                      : null,
+                    child: const Icon(Icons.add),
                   ),
-                  const SizedBox(
-                    width: 20
-                  )
-                ],
-              ),
-            Flexible(
-              child: ListView(
-                children: widget.category.items.map((item) {
-                  return ToDoListItem(
-                    item: item,
-                    completed: _itemSet.contains(item),
-                    onListChanged: _handleListChanged,
-                    onDeleteItem: _handleDeleteItem,
-                  );
-                }).toList(),
-              ),
+                ),
+                const SizedBox(
+                  width: 20
+                )
+              ],
             ),
-          ],
-        ),
+          Flexible(
+            child: ListView(
+              children: widget.category.items.map((item) {
+                return ToDoListItem(
+                  item: item,
+                  completed: _itemSet.contains(item),
+                  onListChanged: _handleListChanged,
+                  onDeleteItem: _handleDeleteItem,
+                );
+              }).toList(),
+            ),
+          ),
+        ],
       ),
     );
   }

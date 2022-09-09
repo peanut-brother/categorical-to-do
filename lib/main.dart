@@ -97,16 +97,23 @@ class _ToDoListState extends State<ToDoList> {
 
   String valueText = "";
 
-  final List<Category> categorys = [Category(items: [const Item(name: "add more todos")], name: "Main Category")];
+  final List<Category> categories = [Category(items: [const Item(name: "add more todos")], name: "Main Category")];
 
   void _handleNewCategory(String catText, itemText) {
     setState(() {
       print("Adding new category");
       Item item = Item(name: itemText);
       Category category = Category(items: [item], name: catText);
-      categorys.insert(0, category);
+      categories.insert(0, category);
       _inputController1.clear();
       _inputController2.clear();
+    });
+  }
+
+  void _handleDeleteCategory(Category category) {
+    setState(() {
+      print("Deleting category");
+      categories.remove(category);
     });
   }
 
@@ -118,10 +125,10 @@ class _ToDoListState extends State<ToDoList> {
         ),
         body: ListView(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          children: categorys.map((category) {
+          children: categories.map((category) {
             return ToDoCategory(
               category: category,
-              onDeleteCategory: (category) {},
+              onDeleteCategory: _handleDeleteCategory,
             );
           }).toList(),
         ),
