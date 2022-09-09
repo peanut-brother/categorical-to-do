@@ -172,7 +172,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
                 ),
                 Expanded(
                   child: Text(
-                    "%$_percentComplete",
+                    "$_percentComplete%",
                     style: null,
                   ),
                 ),
