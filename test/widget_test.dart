@@ -117,8 +117,36 @@ void main() {
     await tester.pump();
     expect(find.text("hi"), findsOneWidget);
 
-      final listItemFinder = find.byType(ToDoListItem);
+    final listItemFinder = find.byType(ToDoListItem);
 
     expect(listItemFinder, findsNWidgets(2));
+  });
+  
+  testWidgets('Long press removes checked item.', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: ToDoList()));
+
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump(); // Pump after every action to rebuild the widgets
+    await tester.enterText(find.byType(TextField), 'test');
+    await tester.pump();
+    await tester.tap(find.byKey(const Key("OKButton")));
+    await tester.pump();
+
+    final listItemFinder = find.byType(ToDoListItem);
+
+    expect(listItemFinder, findsNWidgets(2));
+
+    await tester.longPress(find.text('test'));
+    await tester.pump();
+    
+    expect(listItemFinder, findsNWidgets(2));
+
+    await tester.longPress(find.text('test'));
+    await tester.pump();
+
+    expect(listItemFinder, findsOneWidget);
+
+
   });
 }
