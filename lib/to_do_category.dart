@@ -47,6 +47,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
 
   void _handleDeleteItem(Item item) {
     setState(() {
+      _adjustPercentage();
       print("Deleting item");
       widget.category.items.remove(item);
       _itemSet.remove(item);
@@ -55,6 +56,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
 
   void _handleNewItem(String itemText, Category category) {
     setState(() {
+      _adjustPercentage();
       print("Adding new item");
       Item item = Item(name: itemText);
       category.items.add(item);
