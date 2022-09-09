@@ -39,10 +39,10 @@ class _ToDoCategoryState extends State<ToDoCategory> {
   int _percentComplete = 0;
 
   void _adjustPercentage() {
-    setState(() {
-      int numTrue = 0;
-      _percentComplete = 100 * (_itemSet.length ~/ widget.category.items.length);
-    });
+
+    int numTrue = 0;
+    _percentComplete = 100 * ((widget.category.items.length - _itemSet.length) ~/ widget.category.items.length);
+
   }
 
   void _handleDeleteItem(Item item) {
@@ -70,6 +70,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
       // The framework then calls build, below,
       // which updates the visual appearance of the app.
 
+      _adjustPercentage();
       widget.category.items.remove(item);
       if (!completed) {
         print("Completing");
@@ -181,10 +182,17 @@ class _ToDoCategoryState extends State<ToDoCategory> {
                       ),
                     ),
                   ),
+                  const Spacer(
+                  ),
+                  Expanded(
+                    child: Text(
+                      "%$_percentComplete",
+                      style: null,
+                    ),
+                  ),
                   const SizedBox(
                     width: 20
                   ),
-                  const Spacer(),
                   Flexible(
                     fit: FlexFit.tight,
                     child: ElevatedButton(
