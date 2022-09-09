@@ -160,7 +160,7 @@ void main() {
               itemSet: <Item>{},
             ))));
     final titleFinder = find.text('testCat');
-    final percentFinder = find.text('%0');
+    final percentFinder = find.text('0%');
 
 
     expect(titleFinder, findsOneWidget);
