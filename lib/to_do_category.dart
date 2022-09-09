@@ -49,6 +49,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
     setState(() {
       print("Deleting item");
       widget.category.items.remove(item);
+      _itemSet.remove(item);
     });
   }
 

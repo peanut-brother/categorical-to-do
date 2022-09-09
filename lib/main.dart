@@ -12,7 +12,8 @@ class ToDoList extends StatefulWidget {
 
 class _ToDoListState extends State<ToDoList> {
   // Dialog with text from https://www.appsdeveloperblog.com/alert-dialog-with-a-text-field-in-flutter/
-  final TextEditingController _inputController = TextEditingController();
+  final TextEditingController _inputController1 = TextEditingController();
+  final TextEditingController _inputController2 = TextEditingController();
   final ButtonStyle yesStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20), primary: Colors.green);
   final ButtonStyle noStyle = ElevatedButton.styleFrom(
@@ -28,35 +29,31 @@ class _ToDoListState extends State<ToDoList> {
             content:
               Column(
                 children: [ 
-                  Row(
-                    children: [
+                  Flexible(
+                    child: 
                       TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            catText = value;
-                          });
-                        },
-                        controller: _inputController,
-                        decoration:
-                            const InputDecoration(hintText: "Category Name"),
-                      ),
-                      
-                    ],
+                      onChanged: (value) {
+                        setState(() {
+                          catText = value;
+                        });
+                      },
+                      controller: _inputController1,
+                      decoration:
+                          const InputDecoration(hintText: "Category Name"),
+                    ),
                   ),
-                  Row(
-                    children: [
+                  Flexible(
+                    child: 
                       TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            valueText = value;
-                          });
-                        },
-                        controller: _inputController,
-                        decoration:
-                            const InputDecoration(hintText: "First Item Name"),
-                      ),
-                      
-                    ],
+                      onChanged: (value) {
+                        setState(() {
+                          valueText = value;
+                        });
+                      },
+                      controller: _inputController2,
+                      decoration:
+                          const InputDecoration(hintText: "First Item Name"),
+                    ),
                   ),
                 ],
               ),
@@ -75,7 +72,7 @@ class _ToDoListState extends State<ToDoList> {
 
               // https://stackoverflow.com/questions/52468987/how-to-turn-disabled-button-into-enabled-button-depending-on-conditions
               ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _inputController,
+                valueListenable: _inputController1,
                 builder: (context, value, child) {
                   return ElevatedButton(
                     key: const Key("CancelButton"),
@@ -108,7 +105,8 @@ class _ToDoListState extends State<ToDoList> {
       Item item = Item(name: itemText);
       Category category = Category(items: [item], name: catText);
       categorys.insert(0, category);
-      _inputController.clear();
+      _inputController1.clear();
+      _inputController2.clear();
     });
   }
 
@@ -141,5 +139,3 @@ void main() {
     home: ToDoList(),
   ));
 }
-
-// restructure so that button to add item is associated with each individual category. add button to add categories. Percentage of completed tasks in category. Rework unit tests.
