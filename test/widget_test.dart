@@ -64,7 +64,7 @@ void main() {
     expect(listItemFinder, findsOneWidget);
   });
 
-  testWidgets('Clicking and Typing adds item to ToDoList', (tester) async {
+  testWidgets('Clicking and Typing adds item and cat to ToDoList', (tester) async {
     await tester.pumpWidget(const MaterialApp(home: ToDoList()));
 
     expect(find.byType(TextField), findsNothing);
@@ -83,10 +83,9 @@ void main() {
 
     await tester.tap(find.byKey(const Key("OKButton")));
     await tester.pump();
-    expect(find.text("hi2"), findsOneWidget);
 
     final listItemFinder = find.byType(ToDoListItem);
-    final listCatFinder = find.byType(Category);
+    final listCatFinder = find.byType(ToDoCategory);
 
     expect(listItemFinder, findsNWidgets(2));
     expect(listCatFinder, findsNWidgets(2));
@@ -99,5 +98,27 @@ void main() {
     var category = Category(items: [item], name: "test Category");
 
     expect(category.getItems()[0], isA<Item>());
+  });
+
+  testWidgets('Button creates new items in category.', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: ToDoList()));
+
+    expect(find.byType(TextField), findsNothing);
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump(); // Pump after every action to rebuild the widgets
+    expect(find.text("hi"), findsNothing);
+
+    await tester.enterText(find.byType(TextField), 'hi');
+    await tester.pump();
+    expect(find.text("hi"), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key("OKButton")));
+    await tester.pump();
+    expect(find.text("hi"), findsOneWidget);
+
+      final listItemFinder = find.byType(ToDoListItem);
+
+    expect(listItemFinder, findsNWidgets(2));
   });
 }
