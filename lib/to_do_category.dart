@@ -23,11 +23,13 @@ class ToDoCategory extends StatefulWidget {
   ToDoCategory(
     {required this.category,
     required this.onDeleteCategory,
+    required this.itemSet,
     super.key}
   );
 
   final Category category;
   final ToDoCategoryRemovedCallback onDeleteCategory;
+  Set<Item> itemSet;
 
   @override
   State<ToDoCategory> createState() => _ToDoCategoryState();
@@ -41,25 +43,25 @@ class _ToDoCategoryState extends State<ToDoCategory> {
   void _adjustPercentage() {
 
     int numTrue = 0;
-    _percentComplete = 100 * ((widget.category.items.length - _itemSet.length) ~/ widget.category.items.length);
+    _percentComplete = (widget.itemSet.length * 100) ~/ (widget.category.items.length);
 
   }
 
   void _handleDeleteItem(Item item) {
     setState(() {
-      _adjustPercentage();
       print("Deleting item");
       widget.category.items.remove(item);
+      _adjustPercentage();
     });
   }
 
   void _handleNewItem(String itemText, Category category) {
     setState(() {
-      _adjustPercentage();
       print("Adding new item");
       Item item = Item(name: itemText);
       category.items.add(item);
       _inputController.clear();
+      _adjustPercentage();
     });
   }
 
@@ -71,17 +73,18 @@ class _ToDoCategoryState extends State<ToDoCategory> {
       // The framework then calls build, below,
       // which updates the visual appearance of the app.
 
-      _adjustPercentage();
+
       widget.category.items.remove(item);
       if (!completed) {
         print("Completing");
-        _itemSet.add(item);
+        widget.itemSet.add(item);
         widget.category.items.add(item);
       } else {
         print("Making Undone");
-        _itemSet.remove(item);
+        widget.itemSet.remove(item);
         widget.category.items.insert(0, item);
       }
+      _adjustPercentage();
     });
   }
 
@@ -146,8 +149,6 @@ class _ToDoCategoryState extends State<ToDoCategory> {
 
   String valueText = "";
 
-  final _itemSet = <Item>{};
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -161,11 +162,9 @@ class _ToDoCategoryState extends State<ToDoCategory> {
                 ),
                 Flexible(
                   fit: FlexFit.tight,
-                    child: Expanded(
-                    child: Text(
-                      widget.category.name,
-                      style: null,
-                    ),
+                  child: Text(
+                    widget.category.name,
+                    style: null,
                   ),
                 ),
                 const Spacer(
@@ -182,18 +181,18 @@ class _ToDoCategoryState extends State<ToDoCategory> {
                 Flexible(
                   fit: FlexFit.tight,
                   child: ElevatedButton(
-                    onPressed: () { 
-                      setState(() {
+                    onPressed: () {
+                        setState(() {
                         _displayTextInputDialog(context);
                       });
                     },
-                    onLongPress: _itemSet.isEmpty 
-                      ? () {
-                        setState(() {
-                          widget.onDeleteCategory(widget.category);
-                        });
-                      }
-                      : null,
+                    onLongPress: widget.itemSet.containsAll(widget.category.items)
+                    ? () {
+                      setState(() {
+                        widget.onDeleteCategory(widget.category);
+                      });
+                    }
+                    : null,
                     child: const Icon(Icons.add),
                   ),
                 ),
@@ -207,7 +206,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
               children: widget.category.items.map((item) {
                 return ToDoListItem(
                   item: item,
-                  completed: _itemSet.contains(item),
+                  completed: widget.itemSet.contains(item),
                   onListChanged: _handleListChanged,
                   onDeleteItem: _handleDeleteItem,
                 );

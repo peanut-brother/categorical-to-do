@@ -129,6 +129,7 @@ class _ToDoListState extends State<ToDoList> {
             return ToDoCategory(
               category: category,
               onDeleteCategory: _handleDeleteCategory,
+              itemSet: <Item>{},
             );
           }).toList(),
         ),
