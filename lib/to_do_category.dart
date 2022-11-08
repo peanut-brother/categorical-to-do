@@ -107,6 +107,17 @@ class _ToDoCategoryState extends State<ToDoCategory> {
               decoration: const InputDecoration(hintText: "New Item"),
             ),
             actions: <Widget>[
+              ElevatedButton(
+                key: const Key("CancelButton"),
+                style: noStyle,
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+                child: const Text('Cancel'),
+              ),
+              // https://stackoverflow.com/questions/52468987/how-to-turn-disabled-button-into-enabled-button-depending-on-conditions
               ValueListenableBuilder<TextEditingValue>(
                 valueListenable: _inputController,
                 builder: (context, value, child) {
@@ -124,18 +135,6 @@ class _ToDoCategoryState extends State<ToDoCategory> {
                     child: const Text('OK'),
                   );
                 },
-              ),
-
-              // https://stackoverflow.com/questions/52468987/how-to-turn-disabled-button-into-enabled-button-depending-on-conditions
-              ElevatedButton(
-                key: const Key("CancelButton"),
-                style: noStyle,
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-                },
-                child: const Text('Cancel'),
               ),
             ],
           );

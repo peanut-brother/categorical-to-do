@@ -18,13 +18,13 @@ class _ToDoListState extends State<ToDoList> {
   late final TextEditingController _inputController1 = TextEditingController()
     ..addListener(
       () {
-        listenerDeclaration();
+        listenerChecker();
       },
     );
   late final TextEditingController _inputController2 = TextEditingController()
     ..addListener(
       () {
-        listenerDeclaration();
+        listenerChecker();
       },
     );
   final ButtonStyle yesStyle = ElevatedButton.styleFrom(
@@ -37,7 +37,7 @@ class _ToDoListState extends State<ToDoList> {
   String valueText = "";
 
   // listener if statement check
-  listenerDeclaration() {
+  listenerChecker() {
     if (_inputController1.text.isNotEmpty &&
         _inputController2.text.isNotEmpty) {
       isEnabled.value = true;
