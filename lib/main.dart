@@ -15,91 +15,87 @@ class _ToDoListState extends State<ToDoList> {
   final TextEditingController _inputController1 = TextEditingController();
   final TextEditingController _inputController2 = TextEditingController();
   final ButtonStyle yesStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20), primary: Colors.green);
+      textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.green);
   final ButtonStyle noStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20), primary: Colors.red);
-
-  Future<void> _displayTextInputDialog(BuildContext context) async {
-    print("Loading Dialog");
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Item To Add'),
-            content:
-              Column(
-                children: [ 
-                  Flexible(
-                    child: 
-                      TextField(
-                      key: Key('textField1'),
-                      onChanged: (value) {
-                        setState(() {
-                          catText = value;
-                        });
-                      },
-                      controller: _inputController1,
-                      decoration:
-                          const InputDecoration(hintText: "Category Name"),
-                    ),
-                  ),
-                  Flexible(
-                    child: 
-                      TextField(
-                      key: Key('textField2'),
-                      onChanged: (value) {
-                        setState(() {
-                          valueText = value;
-                        });
-                      },
-                      controller: _inputController2,
-                      decoration:
-                          const InputDecoration(hintText: "First Item Name"),
-                    ),
-                  ),
-                ],
-              ),
-            actions: <Widget>[
-              ElevatedButton(
-                key: const Key("OKButton"),
-                style: yesStyle,
-                child: const Text('OK'),
-                onPressed: () {
-                  setState(() {
-                    _handleNewCategory(catText, valueText);
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-
-              // https://stackoverflow.com/questions/52468987/how-to-turn-disabled-button-into-enabled-button-depending-on-conditions
-              ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _inputController1,
-                builder: (context, value, child) {
-                  return ElevatedButton(
-                    key: const Key("CancelButton"),
-                    style: noStyle,
-                    onPressed: value.text.isNotEmpty
-                        ? () {
-                            setState(() {
-                              Navigator.pop(context);
-                            });
-                          }
-                        : null,
-                    child: const Text('Cancel'),
-                  );
-                },
-              ),
-            ],
-          );
-        });
-  }
+      textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.red);
 
   String catText = "";
 
   String valueText = "";
 
-  final List<Category> categories = [Category(items: [const Item(name: "add more todos")], name: "Main Category")];
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    print("Loading Dialog");
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Item To Add'),
+          content: Column(
+            children: [
+              Flexible(
+                child: TextField(
+                  key: const Key('CategName'),
+                  onChanged: (value) {
+                    setState(() {
+                      catText = value;
+                    });
+                  },
+                  controller: _inputController1,
+                  decoration: const InputDecoration(hintText: "Category Name"),
+                ),
+              ),
+              Flexible(
+                child: TextField(
+                  key: const Key('ItemForCateg'),
+                  onChanged: (value) {
+                    setState(() {
+                      valueText = value;
+                    });
+                  },
+                  controller: _inputController2,
+                  decoration:
+                      const InputDecoration(hintText: "First Category Item"),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              key: const Key("CancelButton"),
+              style: noStyle,
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                  _inputController1.clear();
+                  _inputController2.clear();
+                });
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              key: const Key("OKButton"),
+              style: yesStyle,
+              // check if both controllers are not empty
+              onPressed: _inputController1.text.isNotEmpty &
+                      _inputController2.text.isNotEmpty
+                  ? () {
+                      setState(() {
+                        _handleNewCategory(catText, valueText);
+                        Navigator.pop(context);
+                      });
+                    }
+                  : null,
+              child: const Text('Add Category'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  final List<Category> categories = [
+    Category(items: [const Item(name: "add more todos")], name: "Main Category")
+  ];
 
   void _handleNewCategory(String catText, itemText) {
     setState(() {
@@ -131,7 +127,7 @@ class _ToDoListState extends State<ToDoList> {
             return ToDoCategory(
               category: category,
               onDeleteCategory: _handleDeleteCategory,
-              itemSet: <Item>{},
+              itemSet: const <Item>{},
             );
           }).toList(),
         ),
