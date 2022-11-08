@@ -104,8 +104,7 @@ class _ToDoCategoryState extends State<ToDoCategory> {
                 });
               },
               controller: _inputController,
-              decoration:
-                  const InputDecoration(hintText: "type something here"),
+              decoration: const InputDecoration(hintText: "New Item"),
             ),
             actions: <Widget>[
               ValueListenableBuilder<TextEditingValue>(

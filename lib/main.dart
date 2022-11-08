@@ -11,17 +11,40 @@ class ToDoList extends StatefulWidget {
 }
 
 class _ToDoListState extends State<ToDoList> {
+  // initial bool for enabled/disabled button for text form
+  final ValueNotifier<bool> isEnabled = ValueNotifier(false);
+
   // Dialog with text from https://www.appsdeveloperblog.com/alert-dialog-with-a-text-field-in-flutter/
-  final TextEditingController _inputController1 = TextEditingController();
-  final TextEditingController _inputController2 = TextEditingController();
+  late final TextEditingController _inputController1 = TextEditingController()
+    ..addListener(
+      () {
+        listenerDeclaration();
+      },
+    );
+  late final TextEditingController _inputController2 = TextEditingController()
+    ..addListener(
+      () {
+        listenerDeclaration();
+      },
+    );
   final ButtonStyle yesStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.green);
   final ButtonStyle noStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.red);
 
+  // starting text fields
   String catText = "";
-
   String valueText = "";
+
+  // listener if statement check
+  listenerDeclaration() {
+    if (_inputController1.text.isNotEmpty &&
+        _inputController2.text.isNotEmpty) {
+      isEnabled.value = true;
+    } else {
+      isEnabled.value = false;
+    }
+  }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     print("Loading Dialog");
@@ -29,7 +52,7 @@ class _ToDoListState extends State<ToDoList> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Item To Add'),
+          title: const Text('New Category'),
           content: Column(
             children: [
               Flexible(
@@ -72,21 +95,21 @@ class _ToDoListState extends State<ToDoList> {
               },
               child: const Text('Cancel'),
             ),
-            ElevatedButton(
-              key: const Key("OKButton"),
-              style: yesStyle,
-              // check if both controllers are not empty
-              onPressed: _inputController1.text.isNotEmpty &
-                      _inputController2.text.isNotEmpty
-                  ? () {
-                      setState(() {
-                        _handleNewCategory(catText, valueText);
-                        Navigator.pop(context);
-                      });
-                    }
-                  : null,
-              child: const Text('Add Category'),
-            ),
+            ValueListenableBuilder<bool>(
+              valueListenable: isEnabled,
+              builder: (context, value, child) {
+                return ElevatedButton(
+                    key: const Key("OKButton"),
+                    style: yesStyle,
+                    onPressed: value
+                        ? () {
+                            _handleNewCategory(catText, valueText);
+                            Navigator.pop(context);
+                          }
+                        : null,
+                    child: const Text("OK"));
+              },
+            )
           ],
         );
       },
