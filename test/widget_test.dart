@@ -64,7 +64,8 @@ void main() {
     expect(listItemFinder, findsOneWidget);
   });
 
-  testWidgets('Clicking and Typing adds item and cat to ToDoList', (tester) async {
+  testWidgets('Clicking and Typing adds item and cat to ToDoList',
+      (tester) async {
     await tester.pumpWidget(const MaterialApp(home: ToDoList()));
 
     expect(find.byType(TextField), findsNothing);
@@ -73,11 +74,11 @@ void main() {
     await tester.pump(); // Pump after every action to rebuild the widgets
     expect(find.text("hi"), findsNothing);
 
-    await tester.enterText(find.byKey(const Key('textField1')), 'hi');
+    await tester.enterText(find.byKey(const Key('CategName')), 'hi');
     await tester.pump();
     expect(find.text("hi"), findsOneWidget);
 
-    await tester.enterText(find.byKey(const Key('textField2')), 'hi2');
+    await tester.enterText(find.byKey(const Key('ItemForCateg')), 'hi2');
     await tester.pump();
     expect(find.text("hi2"), findsOneWidget);
 
@@ -121,10 +122,9 @@ void main() {
 
     expect(listItemFinder, findsNWidgets(2));
   });
-  
+
   testWidgets('Long press removes checked item.', (tester) async {
     await tester.pumpWidget(const MaterialApp(home: ToDoList()));
-
 
     await tester.tap(find.byType(ElevatedButton));
     await tester.pump(); // Pump after every action to rebuild the widgets
@@ -139,7 +139,7 @@ void main() {
 
     await tester.longPress(find.text('test'));
     await tester.pump();
-    
+
     expect(listItemFinder, findsNWidgets(2));
 
     await tester.longPress(find.text('test'));
@@ -152,16 +152,12 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: Scaffold(
             body: ToDoCategory(
-              category: Category(
-                items:[],
-                name: "testCat"
-              ),
-              onDeleteCategory: (category) {},
-              itemSet: <Item>{},
-            ))));
+      category: Category(items: [], name: "testCat"),
+      onDeleteCategory: (category) {},
+      itemSet: <Item>{},
+    ))));
     final titleFinder = find.text('testCat');
     final percentFinder = find.text('0%');
-
 
     expect(titleFinder, findsOneWidget);
     expect(percentFinder, findsOneWidget);
